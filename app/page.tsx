@@ -9,17 +9,17 @@ interface Message {
 
 export default function Home() {
   const [messages, setMessages] = useState<Message[]>([
-    { role: 'system', content: '> MISA TERMINAL v1.0 INITIALIZED' },
-    { role: 'assistant', content: 'GM fam~ ✨ I\'m Misa, your Farcaster guide!\nAsk me about Mini Apps, trending topics, or anything FC related~ hehe' }
+    { role: 'system', content: '> MISA TERMINAL INITIALIZED' },
+    { role: 'assistant', content: 'GM fam~ ✨ Ask me about Farcaster, Mini Apps, trending topics~ hehe (◕‿◕)' }
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const chatBoxRef = useRef<HTMLDivElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (chatBoxRef.current) {
-      chatBoxRef.current.scrollTop = chatBoxRef.current.scrollHeight;
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
   }, [messages]);
 
@@ -28,9 +28,7 @@ export default function Home() {
       try {
         const { sdk } = await import('@farcaster/miniapp-sdk');
         await sdk.actions.ready();
-      } catch (e) {
-        // Not in Mini App context
-      }
+      } catch (e) {}
     };
     initSDK();
     inputRef.current?.focus();
@@ -49,21 +47,21 @@ export default function Home() {
       const res = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          message: msg, 
-          history: messages.filter(m => m.role !== 'system').slice(-8) 
+        body: JSON.stringify({
+          message: msg,
+          history: messages.filter(m => m.role !== 'system').slice(-8)
         })
       });
 
       const data = await res.json();
-      
+
       if (data.error) {
-        setMessages([...newMessages, { role: 'assistant', content: 'ERROR: Connection failed. Try again~' }]);
+        setMessages([...newMessages, { role: 'assistant', content: 'Connection error~ Try again? 😅' }]);
       } else {
         setMessages([...newMessages, { role: 'assistant', content: data.response }]);
       }
     } catch (e) {
-      setMessages([...newMessages, { role: 'assistant', content: 'ERROR: Network error.' }]);
+      setMessages([...newMessages, { role: 'assistant', content: 'Network error~ 😢' }]);
     }
 
     setIsLoading(false);
@@ -79,42 +77,54 @@ export default function Home() {
 
   return (
     <div className="app">
-      <div className="header">
-        <h1>[ MISA ]</h1>
-        <p>Farcaster AI Terminal</p>
+      <div id="pane-output">
+        <div className="text-scroll" ref={scrollRef}>
+          {messages.map((msg, i) => (
+            <div key={i} className={`text-line text-line--${msg.role}`}>
+              {msg.role === 'user' && <strong>YOU&gt; </strong>}
+              {msg.role === 'assistant' && <strong>MISA&gt; </strong>}
+              {msg.content}
+            </div>
+          ))}
+          {isLoading && (
+            <div className="text-line text-line--system">
+              Processing...
+            </div>
+          )}
+        </div>
       </div>
 
-      <div className="chat-box" ref={chatBoxRef}>
-        {messages.map((msg, i) => (
-          <div key={i} className={`message ${msg.role}`}>
-            <span className="sender">
-              {msg.role === 'user' ? 'YOU' : msg.role === 'assistant' ? 'MISA' : 'SYS'}
-            </span>
-            <span>{msg.content}</span>
-          </div>
-        ))}
-        {isLoading && <div className="typing">MISA is processing...</div>}
+      <div id="pane-avatar">
+        <div id="avatar-wrap">
+          <img
+            id="avatar-img"
+            src="/avatar.png"
+            alt="MISA"
+            onError={(e) => {
+              (e.target as HTMLImageElement).style.display = 'none';
+            }}
+          />
+        </div>
+        <span className="avatar-label">MISA</span>
       </div>
 
-      <div className="input-area">
+      <div id="pane-input">
         <input
           ref={inputRef}
+          id="input"
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder="Enter command..."
+          placeholder=""
           disabled={isLoading}
           autoComplete="off"
           spellCheck={false}
         />
-        <button onClick={sendMessage} disabled={isLoading || !input.trim()}>
-          SEND
-        </button>
       </div>
 
       <div className="meta-bar">
-        MISA v1.0 | Farcaster Mini App
+        misa v1.0.0
       </div>
     </div>
   );
