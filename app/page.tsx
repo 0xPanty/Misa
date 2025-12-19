@@ -3,13 +3,14 @@
 import { useState, useRef, useEffect } from 'react';
 
 interface Message {
-  role: 'user' | 'assistant';
+  role: 'user' | 'assistant' | 'system';
   content: string;
 }
 
 export default function Home() {
   const [messages, setMessages] = useState<Message[]>([
-    { role: 'assistant', content: 'GM fam~ ✨ I\'m Misa, your Farcaster guide! Ask me about Mini Apps, trending topics, or anything FC related~ hehe (◕‿◕)' }
+    { role: 'system', content: '> MISA TERMINAL v1.0 INITIALIZED' },
+    { role: 'assistant', content: 'GM fam~ ✨ I\'m Misa, your Farcaster guide!\nAsk me about Mini Apps, trending topics, or anything FC related~ hehe' }
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -23,16 +24,16 @@ export default function Home() {
   }, [messages]);
 
   useEffect(() => {
-    // Initialize Mini App SDK if available
     const initSDK = async () => {
       try {
         const { sdk } = await import('@farcaster/miniapp-sdk');
         await sdk.actions.ready();
       } catch (e) {
-        // Not in Mini App context, ignore
+        // Not in Mini App context
       }
     };
     initSDK();
+    inputRef.current?.focus();
   }, []);
 
   const sendMessage = async () => {
@@ -50,26 +51,26 @@ export default function Home() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
           message: msg, 
-          history: messages.slice(-8) 
+          history: messages.filter(m => m.role !== 'system').slice(-8) 
         })
       });
 
       const data = await res.json();
       
       if (data.error) {
-        setMessages([...newMessages, { role: 'assistant', content: 'oops something went wrong~ try again? 😅' }]);
+        setMessages([...newMessages, { role: 'assistant', content: 'ERROR: Connection failed. Try again~' }]);
       } else {
         setMessages([...newMessages, { role: 'assistant', content: data.response }]);
       }
     } catch (e) {
-      setMessages([...newMessages, { role: 'assistant', content: 'connection error~ 😢' }]);
+      setMessages([...newMessages, { role: 'assistant', content: 'ERROR: Network error.' }]);
     }
 
     setIsLoading(false);
     inputRef.current?.focus();
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
+  const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       sendMessage();
@@ -77,31 +78,22 @@ export default function Home() {
   };
 
   return (
-    <div className="container">
+    <div className="app">
       <div className="header">
-        <h1>✨ Misa ✨</h1>
-        <p>Farcaster AI Assistant</p>
-      </div>
-
-      <div className="avatar-container">
-        <div className="avatar" style={{ 
-          display: 'flex', 
-          alignItems: 'center', 
-          justifyContent: 'center',
-          fontSize: '2.5em'
-        }}>
-          {isLoading ? '💭' : '🌸'}
-        </div>
+        <h1>[ MISA ]</h1>
+        <p>Farcaster AI Terminal</p>
       </div>
 
       <div className="chat-box" ref={chatBoxRef}>
         {messages.map((msg, i) => (
           <div key={i} className={`message ${msg.role}`}>
-            <div className="sender">{msg.role === 'user' ? 'YOU' : 'MISA'}</div>
-            <div>{msg.content}</div>
+            <span className="sender">
+              {msg.role === 'user' ? 'YOU' : msg.role === 'assistant' ? 'MISA' : 'SYS'}
+            </span>
+            <span>{msg.content}</span>
           </div>
         ))}
-        {isLoading && <div className="typing">Misa is typing...</div>}
+        {isLoading && <div className="typing">MISA is processing...</div>}
       </div>
 
       <div className="input-area">
@@ -110,14 +102,19 @@ export default function Home() {
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          onKeyPress={handleKeyPress}
-          placeholder="Ask Misa anything~"
+          onKeyDown={handleKeyDown}
+          placeholder="Enter command..."
           disabled={isLoading}
           autoComplete="off"
+          spellCheck={false}
         />
         <button onClick={sendMessage} disabled={isLoading || !input.trim()}>
-          Send
+          SEND
         </button>
+      </div>
+
+      <div className="meta-bar">
+        MISA v1.0 | Farcaster Mini App
       </div>
     </div>
   );

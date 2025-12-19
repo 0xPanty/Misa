@@ -1,3 +1,13 @@
+:root {
+  --theme-color: #33ff99;
+  --user-color: #64ffff;
+  --error-color: #ff6666;
+  --bg-color: rgba(0, 20, 10, 0.95);
+  --panel-bg: rgba(0, 20, 10, 0.5);
+  --border-color: rgba(51, 255, 153, 0.5);
+  --glow: 0 0 5px rgba(51, 255, 153, 0.6), 0 0 15px rgba(51, 255, 153, 0.3);
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -5,172 +15,225 @@
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  font-family: Consolas, Menlo, 'Courier New', monospace;
+  font-size: 14px;
+  background: #0a0a0a;
   min-height: 100vh;
-  color: #fff;
+  color: var(--theme-color);
 }
 
-.container {
-  max-width: 500px;
-  margin: 0 auto;
-  padding: 16px;
-  min-height: 100vh;
+/* CRT 扫描线效果 */
+.app::after {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0) 0px,
+    rgba(255, 255, 255, 0) 2px,
+    rgba(0, 0, 0, 0.15) 2px,
+    rgba(0, 0, 0, 0.15) 4px
+  );
+  pointer-events: none;
+  z-index: 999;
+}
+
+.app {
   display: flex;
   flex-direction: column;
+  min-height: 100vh;
+  padding: 20px;
+  background: var(--bg-color);
+  position: relative;
+}
+
+/* 顶部装饰线 */
+.app::before {
+  content: "";
+  position: absolute;
+  top: 12px;
+  left: 20px;
+  right: 20px;
+  height: 2px;
+  background: var(--theme-color);
+  box-shadow: var(--glow);
 }
 
 .header {
   text-align: center;
-  padding: 16px 0;
+  padding: 20px 0 10px;
+  border-bottom: 1px solid var(--border-color);
+  margin-bottom: 15px;
 }
 
 .header h1 {
-  color: #ff99cc;
-  font-size: 1.5em;
-  text-shadow: 0 0 20px rgba(255, 153, 204, 0.5);
+  color: var(--theme-color);
+  font-size: 1.4em;
+  font-weight: normal;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  text-shadow: var(--glow);
 }
 
 .header p {
-  color: #aaa;
-  font-size: 0.9em;
-  margin-top: 4px;
-}
-
-.avatar-container {
-  text-align: center;
-  margin: 12px 0;
-}
-
-.avatar {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  border: 3px solid #ff99cc;
-  box-shadow: 0 0 30px rgba(255, 153, 204, 0.4);
-  object-fit: cover;
-  background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+  color: var(--theme-color);
+  opacity: 0.6;
+  font-size: 0.85em;
+  margin-top: 5px;
 }
 
 .chat-box {
   flex: 1;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 15px;
-  padding: 16px;
+  border: 1px solid var(--border-color);
+  box-shadow: var(--glow);
+  background: var(--panel-bg);
+  padding: 15px;
   overflow-y: auto;
-  margin-bottom: 16px;
+  margin-bottom: 15px;
   min-height: 300px;
-  max-height: calc(100vh - 300px);
+  max-height: calc(100vh - 200px);
 }
 
 .message {
   margin-bottom: 12px;
-  padding: 10px 14px;
-  border-radius: 12px;
-  max-width: 85%;
-  animation: fadeIn 0.3s ease;
-  font-size: 0.95em;
-  line-height: 1.4;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.message.user {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  margin-left: auto;
-}
-
-.message.assistant {
-  background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
-  color: #333;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-wrap: break-word;
 }
 
 .message .sender {
-  font-size: 0.75em;
+  font-weight: bold;
+  margin-right: 8px;
+}
+
+.message.user {
+  color: var(--user-color);
+}
+
+.message.user .sender::before {
+  content: "> ";
+}
+
+.message.assistant {
+  color: var(--theme-color);
+}
+
+.message.assistant .sender::before {
+  content: "$ ";
+}
+
+.message.system {
+  color: var(--theme-color);
   opacity: 0.7;
-  margin-bottom: 4px;
-  font-weight: 600;
+}
+
+.message.error {
+  color: var(--error-color);
 }
 
 .input-area {
   display: flex;
-  gap: 8px;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 15px;
+  border: 1px solid var(--border-color);
+  box-shadow: var(--glow);
+  background: var(--panel-bg);
+}
+
+.input-area::before {
+  content: ">";
+  color: var(--user-color);
+  font-weight: bold;
 }
 
 .input-area input {
   flex: 1;
-  padding: 14px 18px;
+  background: transparent;
   border: none;
-  border-radius: 25px;
-  background: rgba(255, 255, 255, 0.1);
-  color: #fff;
-  font-size: 1em;
+  color: var(--user-color);
+  font: inherit;
   outline: none;
+  caret-color: var(--user-color);
 }
 
 .input-area input::placeholder {
-  color: rgba(255, 255, 255, 0.5);
-}
-
-.input-area input:focus {
-  background: rgba(255, 255, 255, 0.15);
-  box-shadow: 0 0 15px rgba(255, 153, 204, 0.3);
+  color: var(--theme-color);
+  opacity: 0.4;
 }
 
 .input-area button {
-  padding: 14px 24px;
-  border: none;
-  border-radius: 25px;
-  background: linear-gradient(135deg, #ff99cc 0%, #ff6b9d 100%);
-  color: #fff;
-  font-size: 1em;
+  padding: 8px 16px;
+  border: 1px solid var(--border-color);
+  background: transparent;
+  color: var(--theme-color);
+  font: inherit;
   cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
-  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: all 0.2s;
 }
 
-.input-area button:hover {
-  transform: scale(1.05);
-  box-shadow: 0 5px 20px rgba(255, 153, 204, 0.4);
+.input-area button:hover:not(:disabled) {
+  background: rgba(51, 255, 153, 0.1);
+  box-shadow: var(--glow);
 }
 
 .input-area button:disabled {
-  opacity: 0.5;
+  opacity: 0.4;
   cursor: not-allowed;
-  transform: none;
 }
 
 .typing {
-  color: #ff99cc;
-  font-style: italic;
-  padding: 8px;
-  font-size: 0.9em;
+  color: var(--theme-color);
+  opacity: 0.7;
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0%, 50% { opacity: 0.7; }
+  51%, 100% { opacity: 0.3; }
+}
+
+.meta-bar {
+  text-align: right;
+  font-size: 11px;
+  color: var(--theme-color);
+  opacity: 0.5;
+  margin-top: 10px;
+}
+
+/* 滚动条样式 */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--panel-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--theme-color);
 }
 
 @media (max-width: 480px) {
-  .container {
-    padding: 12px;
+  .app {
+    padding: 15px;
   }
   
   .header h1 {
-    font-size: 1.3em;
-  }
-  
-  .avatar {
-    width: 80px;
-    height: 80px;
+    font-size: 1.2em;
+    letter-spacing: 2px;
   }
   
   .input-area button {
-    padding: 14px 18px;
+    padding: 8px 12px;
   }
 }
