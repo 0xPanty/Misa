@@ -45,7 +45,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     const chat = model.startChat({
       history,
-      systemInstruction: SYSTEM_PROMPT,
+      systemInstruction: {
+        role: "user",
+        parts: [{ text: SYSTEM_PROMPT }]
+      },
     });
 
     // Set headers for streaming
