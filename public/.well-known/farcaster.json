@@ -1,0 +1,17 @@
+{
+  "accountAssociation": {
+    "header": "",
+    "payload": "",
+    "signature": ""
+  },
+  "miniapp": {
+    "version": "1",
+    "name": "Misa",
+    "iconUrl": "https://misa-v1.vercel.app/icon.png",
+    "homeUrl": "https://misa-v1.vercel.app",
+    "splashImageUrl": "https://misa-v1.vercel.app/icon.png",
+    "splashBackgroundColor": "#1a1a2e",
+    "description": "Your friendly AI guide to Farcaster, Mini Apps, and web3",
+    "subtitle": "Farcaster AI Assistant"
+  }
+}
