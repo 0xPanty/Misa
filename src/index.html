@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="fc:miniapp" content='{"version":"1","name":"Misa AI","iconUrl":"https://misa-ai.vercel.app/icon.png"}' />
+  <title>Misa AI</title>
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <div class="app split">
+    <!-- 出力エリア（左パネル） -->
+    <div id="pane-output">
+      <div class="surface-host">
+        <div class="surface">
+          <div class="text-scroll"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- アバターエリア（右パネル） -->
+    <div id="pane-avatar">
+      <div id="avatar-wrap">
+        <img id="avatar-img" src="/idle.png" data-idle="/idle.png" data-talk="/talk.png" alt="MISA" />
+      </div>
+      <span id="avatar-label">MISA</span>
+    </div>
+
+    <!-- 入力エリア（下部） -->
+    <div id="pane-input">
+      <input type="text" id="input" placeholder="" autocomplete="off" spellcheck="false" />
+    </div>
+
+    <!-- メタバー（フッター） -->
+    <div class="meta-bar">
+      <span id="meta">Misa AI v1.0.0</span>
+    </div>
+  </div>
+
+  <script type="module" src="./main.ts"></script>
+</body>
+</html>

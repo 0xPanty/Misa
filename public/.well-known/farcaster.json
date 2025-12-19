@@ -1,0 +1,16 @@
+{
+  "accountAssociation": {
+    "header": "eyJmaWQiOjI3NTY0NiwidHlwZSI6ImN1c3RvZHkiLCJrZXkiOiIweGYzRDcyMTRkODY3MkE5ZjUwNmM2ZmJDRjRkNjE3MUI4RTBBQjQ4NTEifQ",
+    "payload": "eyJkb21haW4iOiJtaXNhLWFpLnZlcmNlbC5hcHAifQ",
+    "signature": "MHg5NDMxMTQ5ZWEwOTM0YTliYzYxODgwZjBiODMzZTM0YmMwM2VhNzIyZGVkNjQwZjQ1MTFlNjUxYjgzODU5OTkzN2ExYWE2MzkxY2UyNmNiYTg0ZGJkN2FiOWJjNGM0NWNhZDMzZmI4NWU1MTk2OGRkOTRjZDQyZjY5MzcxMGY5MTFj"
+  },
+  "frame": {
+    "version": "1",
+    "name": "Misa AI",
+    "iconUrl": "https://misa-ai.vercel.app/icon.png",
+    "homeUrl": "https://misa-ai.vercel.app",
+    "splashImageUrl": "https://misa-ai.vercel.app/og-image.png",
+    "splashBackgroundColor": "#0a0a0a",
+    "webhookUrl": "https://misa-ai.vercel.app/api/webhook"
+  }
+}

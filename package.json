@@ -1,0 +1,22 @@
+{
+  "name": "misa-ai",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.21.0",
+    "dompurify": "^3.3.0",
+    "marked": "^17.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@vercel/node": "^3.2.0",
+    "typescript": "^5",
+    "vite": "^5.4.0"
+  }
+}
